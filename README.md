@@ -7,4 +7,4 @@ currently being used to study forest treatment
 effects on forest production. 
 This repository contains scripts written to
 combine data for use in calculations and data visualization
-of the treatment watershed 77 and the reference watershed 80.
+of the treatment watershed (ws77) and the reference watershed (ws80).

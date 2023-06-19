@@ -1,0 +1,50 @@
+import pandas as pd
+import numpy as np
+import matplotlib as mpl
+
+
+# load and prepare data
+FF_samp=pd.read_csv(
+  "C:\\Users\\name\\Desktop\\folder\\LLCS2018FF.csv",
+                     header = 0)
+FFash=pd.read_csv(
+   "C:\\Users\\name\\Desktop\\folder\\LLCS_FF_ash_2018.csv",
+                     header = 0)
+FF_CHN=pd.read_csv(
+   "C:\\Users\\name\\Desktop\\folder\\LLCS_2018FF_CHN.csv",
+                     header = 0)
+
+
+FFmass =pd.DataFrame(FF_samp
+             .groupby([ 'ws', 'plot', 'ff_layer'])
+             .agg(
+                 avg_g_cm2=pd.NamedAgg(column="FF_mass_g_cm2", aggfunc="mean") )
+)
+FFmass=FFmass.reset_index(drop=False)
+
+FFdata=(pd.merge(FFmass, FFash, on=['plot','ff_layer']).merge(FF_CHN, on=['plot','ff_layer']))
+FFdata['mass_Mg_ha']=FFdata.avg_g_cm2*100
+FFdata['C_Mg_ha']=FFdata.c_per*(FFdata.mass_Mg_ha/100)
+FFdata['N_Mg_ha']=FFdata.n_per*(FFdata.mass_Mg_ha/100)
+
+
+FFdata.to_csv("C:\\Users\\name\\Desktop\\folder\\2018FFdata.csv")
+
+df2 =pd.DataFrame(FFdata
+             .groupby(['year','ws', 'plot'])
+             .agg(
+             C_Mg_ha_sum=pd.NamedAgg(column="C_Mg_ha", aggfunc="sum"),
+             N_Mg_ha_sum=pd.NamedAgg(column="N_Mg_ha", aggfunc="sum"),
+             LOI_avg=pd.NamedAgg(column="loi", aggfunc="mean")
+              )
+)
+df2.to_csv("C:\\Users\\name\\Desktop\\foler\\2018FF_CNsums.csv")
+
+df =pd.DataFrame(FFdata
+             .groupby(['year','ws', 'treatm'])
+             .agg(
+             C_Mg_ha_sum=pd.NamedAgg(column="C_Mg_ha", aggfunc="sum"),
+             N_Mg_ha_sum=pd.NamedAgg(column="N_Mg_ha", aggfunc="sum")
+              )
+)
+df3.to_csv("C:\\Users\\name\\Desktop\\folder\\2018FF_treat_CNsums.csv")

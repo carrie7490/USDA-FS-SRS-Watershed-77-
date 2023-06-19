@@ -1,0 +1,72 @@
+import psycopg2
+import requests
+from shapely.geometry import Point, Polygon, MultiPolygon, mapping
+import datetime
+import geopandas as gpd
+import pandas as pd
+from sqlalchemy import create_engine
+%matplotlib inline
+
+llp=gpd.read_file(r"C:\Users\name\Desktop\folder\\geoWS77.shp")
+llpData=gpd.read_file(r"C:\Users\name\Desktop\folder\2018mineralSoils.csv")
+
+llpData.drop_duplicates()
+llp.drop_duplicates()
+
+#generate layer for all horizons
+WS77soils=llp.merge(llpData, on = 'plot')
+WS77soils=WS77soils.drop({'geometry_y'}, axis=1)
+WS77soils=gpd.GeoDataFrame(WS77soils, geometry='geometry_x')
+WS77soils=WS77soils.rename_geometry('geometry')
+
+#generate layer for horizons 0cm to 10cm
+llp_0_10=pd.DataFrame(llpData.loc[((llpData['horizon'] =='0_10'))])
+geoLLP_0_10=llp.merge(llp_0_10, on = 'plot')
+geoLLP_0_10=geoLLP_0_10.drop({'geometry_y'}, axis=1)
+geoLLP_0_10=gpd.GeoDataFrame(geoLLP_0_10, geometry='geometry_x')
+geoLLP_0_10=geoLLP_0_10.rename_geometry('geometry')
+
+#generate layer for horizons 10cm to 20cm
+llp_10_20=pd.DataFrame(llpData.loc[((llpData['horizon'] =='10_20'))])
+geoLLP_10_20=llp.merge(llp_10_20, on = 'plot')
+geoLLP_10_20=geoLLP_10_20.drop({'geometry_y'}, axis=1)
+geoLLP_10_20=gpd.GeoDataFrame(geoLLP_10_20, geometry='geometry_x')
+geoLLP_10_20=geoLLP_10_20.rename_geometry('geometry')
+
+#generate layer for horizons 20cm to 30cm
+llp_20_30=pd.DataFrame(llpData.loc[((llpData['horizon'] =='20_30'))])
+geoLLP_20_30=llp.merge(llp_20_30, on = 'plot')
+geoLLP_20_30=geoLLP_20_30.drop({'geometry_y'}, axis=1)
+geoLLP_20_30=gpd.GeoDataFrame(geoLLP_20_30, geometry='geometry_x')
+geoLLP_20_30=geoLLP_20_30.rename_geometry('geometry')
+
+#generate layer for horizons 30cm to 50cm
+llp_30_50=pd.DataFrame(llpData.loc[((llpData['horizon'] =='30_50'))])
+geoLLP_30_50=llp.merge(llp_30_50, on = 'plot')
+geoLLP_30_50=geoLLP_30_50.drop({'geometry_y'}, axis=1)
+geoLLP_30_50=gpd.GeoDataFrame(geoLLP_30_50, geometry='geometry_x')
+geoLLP_30_50=geoLLP_30_50.rename_geometry('geometry')
+
+#generate layer for horizons 50cm to 75cm
+llp_50_75=pd.DataFrame(llpData.loc[((llpData['horizon'] =='50_75'))])
+geoLLP_50_75=llp.merge(llp_50_75, on = 'plot')
+geoLLP_50_75=geoLLP_50_75.drop({'geometry_y'}, axis=1)
+geoLLP_50_75=gpd.GeoDataFrame(geoLLP_50_75, geometry='geometry_x')
+geoLLP_50_75=geoLLP_50_75.rename_geometry('geometry')
+
+#generate layer for horizons 50cm to 75cm
+llp_75_100=pd.DataFrame(llpData.loc[((llpData['horizon'] =='50_75'))])
+geoLLP_75_100=llp.merge(llp_75_100, on = 'plot')
+geoLLP_75_100=geoLLP_75_100.drop({'geometry_y'}, axis=1)
+geoLLP_75_100=gpd.GeoDataFrame(geoLLP_75_100, geometry='geometry_x')
+geoLLP_75_100=geoLLP_75_100.rename_geometry('geometry')
+
+
+WS77soils.to_file("C:\\Users\\name\\Desktop\\folder\\2018WS77soils.shp")
+geoLLP_0_10.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_0_10\\2018soils_0_10.shp")
+geoLLP_10_20.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_10_20\\2018soils_10_20.shp")
+geoLLP_20_30.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_20_30\\2018soils_20_30.shp")
+geoLLP_30_50.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_30_50\\2018soils_30_50.shp")
+geoLLP_50_75.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_50_75\\2018soils_50_75.shp")
+geoLLP_75_100.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_75_100\\2018soils_75_100.shp")
+

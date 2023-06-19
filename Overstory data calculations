@@ -1,0 +1,201 @@
+import pandas as pd
+import numpy as np
+import matplotlib as mpl
+
+
+# load and prepare data
+Hugo=pd.read_csv(
+   "C:\\Users\\Name\Desktop\\File\\1991_2022_Hugo.csv",
+                    
+                     header = 0,                  
+                     dtype={'ws': 'str', 'plot':'str','year':'str', 
+                'tree':'str', 'history':'str',
+              'species':'category', 'sp_cd':'category',
+              'dbh_cm':np.float64, 'tr_ht_m':np.float64
+              }                    
+                    )
+
+LLPC=pd.read_csv(
+   "C:\\Users\\Name\\Desktop\\File\\1991_2022_LLP.csv",
+                    
+                     header = 0,                  
+                     dtype={'ws': 'str', 'plot':'str','year':'str', 
+                'tree':'str', 'history':'str',
+              'species':'category', 'sp_cd':'category',
+              'dbh_cm':np.float64, 'tr_ht_m':np.float64
+              }                    
+                    )
+
+treat=pd.read_csv(
+   "C:\\Users\\Name\\Desktop\\File\\2022treatTypes.csv",
+                    
+                     header = 0,
+    dtype={'ws': 'str', 'plot':'str', 'year':'str',
+            'tree':'str', 'history':'str',
+              'species':'category', 'sp_cd':'category',
+              'dbh_cm':np.float64, 'tr_ht_m':np.float64
+          })
+
+Overstory0 = [Hugo, LLPC, treat]
+Overstory = pd.concat(Overstory0)
+Overstory.columns = Overstory.columns.str.strip()
+Overstory['plotNum']=Overstory['ws']+'_'+Overstory['plot']
+Overstory.replace(0, np.nan, inplace=True)
+Overstory.dropna(subset=['dbh_cm'], inplace=True)
+
+#global variables
+dbh = Overstory.dbh_cm
+r=dbh/2
+pi=np.pi
+
+#add Basal area column 
+Overstory['BA']= pi*r*r
+
+#add BM column
+sw=Overstory.loc[Overstory['sp_cd'].isin(['131','121','115','110','60','100','222','221'])]
+y=sw.dbh_cm
+def conifBM(*args):
+    x= [0.5 + ((15000 * y**2.7)/(y**2.7 + 364946))]
+    return x
+
+biomass = (np.squeeze(conifBM()))
+sw['biomass']=biomass.tolist()
+
+hw=Overstory.loc[~Overstory['sp_cd'].isin(['131','121','115','110','60','100','222','221'])]
+hw_dbh=hw.dbh_cm
+def hardwBM(*args):
+    x=[0.5 + ((25000 * hw_dbh**2.5)/(hw_dbh**2.5 + 246872))]
+    return x
+
+biomass = (np.squeeze(hardwBM()))
+hw['biomass']=biomass.tolist()
+
+Overstory1 = [sw, hw]
+Overstory2 = pd.concat(Overstory1)
+Overstory2.drop_duplicates(subset=['year', 'ws', 'plot', 'history', 'tree'], inplace=True, keep='last')
+    
+#averages by plot number with conversions and treatment types
+pl_sum =pd.DataFrame(Overstory2
+             .groupby(['year', 'ws', 'history','plot'])
+             .agg(
+             dbh_avg=pd.NamedAgg(column="dbh_cm", aggfunc="mean"),
+             tr_ct=pd.NamedAgg(column="dbh_cm", aggfunc="count"),
+             tr_ht_avg=pd.NamedAgg(column="tr_ht_m", aggfunc="mean"),
+             BA_sum=pd.NamedAgg(column="BA", aggfunc="sum"),
+             BM_kg_pl=pd.NamedAgg(column="biomass", aggfunc="sum")
+             
+              )
+)
+pl_sum=pl_sum.reset_index(drop=False)
+
+# biomass and basal area conversions and number of tree/ha calculation
+#2.471 acres=1ha
+#1plot=1/10 acre
+# 1cm^2 = 0.0001m^2
+#1kg=0.001megagram
+#kg/plot convert biomass  ((biomass*10)*2.471))/1000) Mg/ha
+pl_sum['BM_Mg_ha']=((pl_sum.BM_kg_pl*10*2.471)/1000)
+
+# cm^2/plot basal area to ((ba*10)*2.471))/10000 = m^2/ha
+pl_sum['BA_m2_ha']=((pl_sum.BA_sum*10*2.471)/10000)
+
+#tree count (tr_ct*10)*2.471) = trees/ha
+pl_sum['tr_ct_ha']=(pl_sum.tr_ct*10*2.471)
+
+# watershed averages by history
+ws_sum =pd.DataFrame(pl_sum
+             .groupby(['year', 'ws', 'history'])
+             .agg(
+             pl_ct=pd.NamedAgg(column="plot", aggfunc="count"),
+             obs_ct=pd.NamedAgg(column="tr_ct", aggfunc="sum"),
+             dbh_Tavg=pd.NamedAgg(column="dbh_avg", aggfunc="mean"),
+             dbh_stDev=pd.NamedAgg(column='dbh_avg', aggfunc="std"),
+             tr_ht_Tavg=pd.NamedAgg(column="tr_ht_avg", aggfunc="mean"),
+             tr_ht_stDev=pd.NamedAgg(column="tr_ht_avg", aggfunc="std"),
+             tr_ct_ha=pd.NamedAgg(column="tr_ct_ha", aggfunc="mean"),
+             tr_ct_stDev=pd.NamedAgg(column="tr_ct_ha", aggfunc="std"),
+             BA_avg=pd.NamedAgg(column="BA_m2_ha", aggfunc="mean"),
+             BA_stDev=pd.NamedAgg(column="BA_m2_ha", aggfunc="std"),
+             BM_avg=pd.NamedAgg(column="BM_Mg_ha", aggfunc="mean"), 
+             BM_stDev=pd.NamedAgg(column="BM_Mg_ha", aggfunc="std")
+              )
+)
+ws_sum.round(1)
+
+#add Standard error of mean (SEM) calculations
+#SEM per plot counts
+ws_sum['dbh_SEM_pl']=ws_sum.dbh_stDev/(ws_sum.pl_ct**0.5)
+ws_sum['tr_ht_SEM_pl']=ws_sum.tr_ht_stDev/(ws_sum.pl_ct**0.5)
+ws_sum['tr_ct_SEM_pl']=ws_sum.tr_ct_stDev/(ws_sum.pl_ct**0.5)
+ws_sum['BA_SEM_pl']=ws_sum.BA_stDev/(ws_sum.pl_ct**0.5)
+ws_sum['BM_SEM_pl']=ws_sum.BM_stDev/(ws_sum.pl_ct**0.5)
+
+#SEM per tree measured
+ws_sum['dbh_SEM_obs']=ws_sum.dbh_stDev/(ws_sum.obs_ct**0.5)
+ws_sum['tr_ht_SEM_obs']=ws_sum.tr_ht_stDev/(ws_sum.obs_ct**0.5)
+ws_sum['tr_ct_SEM_obs']=ws_sum.tr_ct_stDev/(ws_sum.obs_ct**0.5)
+ws_sum['BA_SEM_obs']=ws_sum.BA_stDev/(ws_sum.obs_ct**0.5)
+ws_sum['BM_SEM_obs']=ws_sum.BM_stDev/(ws_sum.obs_ct**0.5)
+
+ws_sum=ws_sum.reset_index(drop=False)
+
+#create table of live and necromass from 2018 and 2022
+
+t=ws_sum[['ws', 'year','history', 'tr_ct_ha', 'dbh_Tavg', 'tr_ht_Tavg',
+          'BA_avg', 'BM_avg']].copy()
+
+
+t1=t.loc[((t['history']=='1')|
+          (t['history']=='2'))]
+
+t2=pd.DataFrame(t.loc[((t['year']=='2018')|
+         (t['year']=='2022'))])
+
+
+#pivot_table
+t3=pd.melt(t2, id_vars=['ws', 'year','history'], value_vars=['tr_ct_ha', 'dbh_Tavg', 'tr_ht_Tavg', 
+                                                           'BA_avg', 'BM_avg'], value_name='data')
+
+
+
+pivotWS=t3.pivot_table(index=['history','variable'],
+              columns=['ws', 'year'],
+              values=['data'], margins=True)
+
+
+# averages by treatment type
+t5 =pd.DataFrame(Overstory2
+             .groupby(['year', 'ws', 'history','plot', 'treatment'])
+             .agg(
+             dbh_avg=pd.NamedAgg(column="dbh_cm", aggfunc="mean"),
+             tr_ct=pd.NamedAgg(column="dbh_cm", aggfunc="count"),
+             tr_ht_avg=pd.NamedAgg(column="tr_ht_m", aggfunc="mean"),
+             BA_sum=pd.NamedAgg(column="BA", aggfunc="sum"),
+             BM_kg_pl=pd.NamedAgg(column="biomass", aggfunc="sum")
+             
+              )
+)
+t5=t5.reset_index(drop=False)
+t5['BM_Mg_ha']=((t5.BM_kg_pl*10*2.471)/1000)
+
+# cm^2/plot basal area to ((ba*10)*2.471))/10000 = m^2/ha
+t5['BA_m2_ha']=((t5.BA_sum*10*2.471)/10000)
+
+#tree count (tr_ct*10)*2.471) = trees/ha
+t5['tr_ct_ha']=(t5.tr_ct*10*2.471)
+
+t6=pd.DataFrame(t5.loc[(t5['history']=='1')])
+t7=pd.DataFrame(t6.loc[(t5['year']=='2022')])
+
+#averages by treatment type for live trees in 2022
+treat_sum =pd.DataFrame(t6
+             .groupby(['treatment'])
+             .agg(
+             dbh_Tavg=pd.NamedAgg(column="dbh_avg", aggfunc="mean"),
+             tr_ht_Tavg=pd.NamedAgg(column="tr_ht_avg", aggfunc="mean"),
+             tr_ct_ha=pd.NamedAgg(column="tr_ct_ha", aggfunc="mean"),
+             BA_avg=pd.NamedAgg(column="BA_m2_ha", aggfunc="mean"),
+             BM_avg=pd.NamedAgg(column="BM_Mg_ha", aggfunc="mean")
+             
+              )
+)

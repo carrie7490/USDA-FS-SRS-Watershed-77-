@@ -1,0 +1,64 @@
+import pandas as pd
+import numpy as np
+import matplotlib as mpl
+
+
+# load and prepare data
+soils_BD=pd.read_csv(
+   "C:\\Users\\Name\Desktop\\Folder\\LLSC_2018BD_soils.csv",
+                     header = 0)
+soils_CHN=pd.read_csv(
+    "C:\\Users\\Name\\Desktop\\Folder\\LLCS_soil_CHN_2018.csv",
+           header = 0)
+# average bulk density (BD)
+soils_BD2 =pd.DataFrame(soils_BD
+             .groupby(['treatm', 'ws', 's_type','plot', 's_depth_cm'])
+             .agg(
+             BD=pd.NamedAgg(column="BD_g_cm3", aggfunc="mean")
+              ))
+soils_BD2=soils_BD2.reset_index(drop=False)
+#average analyte percent
+soils_CHN2 =pd.DataFrame(soils_CHN 
+             .groupby(['ws', 'plot', 's_depth_cm'])
+             .agg(
+             C_per=pd.NamedAgg(column="c_per", aggfunc="mean"),
+             N_per=pd.NamedAgg(column="n_per", aggfunc="mean"),
+))
+
+soils_CHN2=soils_CHN2.reset_index(drop=False)
+#combine two averaged data sets
+soils_pl_s=pd.merge(soils_CHN2, soils_BD2, how="outer", on=['ws', 'plot','s_depth_cm'])
+soils_pl_s["BD"].fillna(1.38, inplace=True)
+soils_pl_s.to_csv("C:\\Users\\Name\\Desktop\\Folder\\soils_pl_s.csv")
+soils_CHN2.to_csv("C:\\Users\\Name\\Desktop\\Folder\\soils_CHN2.csv")
+
+# calculate analyte percent to Megagrams/hectare
+df=soils_pl_s
+C=df.C_per
+N=df.N_per
+i=df.interval_cm
+bd=df.BD
+df["year"]=2018
+df['C_Mg_ha']=(bd*i*100*(C/100)) # carbon calculation
+df['N_Mg_ha']=(bd*i*100*(N/100)) #nitrogen calculation
+df.to_csv("C:\\Users\\Name\\Desktop\\Folder\\2018mineralSoils.csv")
+
+# sum all Mg/ha analyte within the same plot
+df2 =pd.DataFrame(df
+             .groupby(['year','ws', 'plot'])
+             .agg(
+             C_Mg_ha_sum=pd.NamedAgg(column="C_Mg_ha", aggfunc="sum"),
+             N_Mg_ha_sum=pd.NamedAgg(column="N_Mg_ha", aggfunc="sum")
+              )
+)
+df2.to_csv("C:\\Users\\Name\\Desktop\\Folder\\2018min_S_CNsums.csv")
+# sum all Mg/ha analyte within the same treatment type (only available for 2022)
+df3 =pd.DataFrame(df
+             .groupby(['year','ws', 'treatm'])
+             .agg(
+             C_Mg_ha_sum=pd.NamedAgg(column="C_Mg_ha", aggfunc="sum"),
+             N_Mg_ha_sum=pd.NamedAgg(column="N_Mg_ha", aggfunc="sum")
+              )
+)
+df3.to_csv("C:\\Users\\Name\\Desktop\\Folder\\2018_treat_CNsums.csv")
+

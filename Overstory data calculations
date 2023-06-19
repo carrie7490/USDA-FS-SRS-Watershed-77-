@@ -5,7 +5,7 @@ import matplotlib as mpl
 
 # load and prepare data
 Hugo=pd.read_csv(
-   "C:\\Users\\Name\Desktop\\File\\1991_2022_Hugo.csv",
+   "C:\\Users\\Name\Desktop\\Folder\\1991_2022_Hugo.csv",
                     
                      header = 0,                  
                      dtype={'ws': 'str', 'plot':'str','year':'str', 
@@ -16,7 +16,7 @@ Hugo=pd.read_csv(
                     )
 
 LLPC=pd.read_csv(
-   "C:\\Users\\Name\\Desktop\\File\\1991_2022_LLP.csv",
+   "C:\\Users\\Name\\Desktop\\folder\\1991_2022_LLP.csv",
                     
                      header = 0,                  
                      dtype={'ws': 'str', 'plot':'str','year':'str', 
@@ -27,7 +27,7 @@ LLPC=pd.read_csv(
                     )
 
 treat=pd.read_csv(
-   "C:\\Users\\Name\\Desktop\\File\\2022treatTypes.csv",
+   "C:\\Users\\Name\\Desktop\\folder\\2022treatTypes.csv",
                     
                      header = 0,
     dtype={'ws': 'str', 'plot':'str', 'year':'str',
@@ -172,9 +172,7 @@ t5 =pd.DataFrame(Overstory2
              tr_ht_avg=pd.NamedAgg(column="tr_ht_m", aggfunc="mean"),
              BA_sum=pd.NamedAgg(column="BA", aggfunc="sum"),
              BM_kg_pl=pd.NamedAgg(column="biomass", aggfunc="sum")
-             
-              )
-)
+))
 t5=t5.reset_index(drop=False)
 t5['BM_Mg_ha']=((t5.BM_kg_pl*10*2.471)/1000)
 
@@ -196,6 +194,11 @@ treat_sum =pd.DataFrame(t6
              tr_ct_ha=pd.NamedAgg(column="tr_ct_ha", aggfunc="mean"),
              BA_avg=pd.NamedAgg(column="BA_m2_ha", aggfunc="mean"),
              BM_avg=pd.NamedAgg(column="BM_Mg_ha", aggfunc="mean")
-             
-              )
-)
+))
+
+ws_sum.to_csv("C:\\Users\\name\\Desktop\\folder\\ws_avgs_1991_2022.csv")
+Overstory2.to_csv("C:\\Users\\name\\Desktop\\folder\\OverstoryData.csv")
+pl_sum.to_csv("C:\\Users\\name\\Desktop\\folder\\pl_sum.csv")
+pivotWS.to_csv("C:\\Users\\Carrie\\Desktop\\folder\\pivot_ws_avgs_2018_2022.csv")
+treat_sum.to_csv("C:\\Users\\Carrie\\Desktop\\folder\\treat_avgs.csv")
+

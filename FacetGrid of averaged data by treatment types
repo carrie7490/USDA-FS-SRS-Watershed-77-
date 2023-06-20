@@ -1,0 +1,67 @@
+import pandas as pd
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+
+#prepare data
+Overstory=pd.read_csv(
+   "C:\\Users\\Carrie\\Desktop\\watershedStudy\\Overstory combined data\\OverstoryData.csv",
+                    
+                     header = 0,                  
+                     dtype={'ws': 'str', 'plot':'str','year':object, 
+                'tree':'str', 'history':object,
+              'species':'category', 'sp_cd':'category',
+              'dbh_cm':np.float64, 'tr_ht_m':np.float64
+              }                    
+                    )
+
+# averages by treatment type
+t =pd.DataFrame(Overstory
+             .groupby(['year', 'ws', 'history','plot', 'treatment'])
+             .agg(
+             dbh_avg=pd.NamedAgg(column="dbh_cm", aggfunc="mean"),
+             tr_ct=pd.NamedAgg(column="dbh_cm", aggfunc="count"),
+             tr_ht_avg=pd.NamedAgg(column="tr_ht_m", aggfunc="mean"),
+             BA_sum=pd.NamedAgg(column="BA", aggfunc="sum"),
+             BM_kg_pl=pd.NamedAgg(column="biomass", aggfunc="sum")
+             
+              )
+)
+t=t.reset_index(drop=False)
+t['BM_Mg_ha']=((t.BM_kg_pl*10*2.471)/1000)
+
+# cm^2/plot basal area to ((ba*10)*2.471))/10000 = m^2/ha
+t['BA_m2_ha']=((t.BA_sum*10*2.471)/10000)
+
+#tree count (tr_ct*10)*2.471) = trees/ha
+t['tr_ct_ha']=(t.tr_ct*10*2.471)
+
+
+t2=pd.DataFrame(t.loc[(t['year']=='2022')])
+t3=pd.DataFrame(t2.loc[(t['history']=='1')])
+
+t4 =pd.DataFrame(t3
+             .groupby(['treatment'])
+             .agg(
+             dbh_Tavg=pd.NamedAgg(column="dbh_avg", aggfunc="mean"),
+             tr_ht_Tavg=pd.NamedAgg(column="tr_ht_avg", aggfunc="mean"),
+             tr_ct_ha=pd.NamedAgg(column="tr_ct_ha", aggfunc="mean"),
+             BA_avg=pd.NamedAgg(column="BA_m2_ha", aggfunc="mean"),
+             BM_avg=pd.NamedAgg(column="BM_Mg_ha", aggfunc="mean")
+             
+              )
+)
+t4=treat_sum.reset_index(drop=False)
+
+
+fig, axes=plt.subplots(2,2, figsize=(12,12))
+g1=sns.barplot(ax=axes[0,0], data=t4, x="treatment", y="dbh_Tavg", palette="mako",)
+g1.set(ylabel="Average DBH (cm)", xlabel="")
+g2=sns.barplot(ax=axes[0,1], data=t4, x="treatment", y="tr_ht_Tavg",palette="mako",)
+g2.set(ylabel="Average tree height (m)", xlabel="")
+g3=sns.barplot(ax=axes[1,0], data=t4, x="treatment", y="BA_avg", palette="mako",)
+g3.set(ylabel="Basal Area (m2/ha)", xlabel="")
+g4=sns.barplot(ax=axes[1,1], data=t4, x="treatment", y="BM_avg", palette="mako",)
+g4.set(ylabel="Biomass (Mg/ha)", xlabel="")

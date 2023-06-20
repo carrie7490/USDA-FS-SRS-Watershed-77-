@@ -20,7 +20,7 @@ geoWS77=pd.concat([hg_pl77, llp])
 geoWS77=geoWS77.drop({'plot_num', 'NAME', 'OBJECTID', 'CATEGORY'}, axis=1)
 
 geoWS77.to_file("C:\\Users\\name\\Desktop\\folder\\geoWS77.shp")
-geoWS77.to_csv("C:\\Users\\name\\Desktop\\folder\\geoWS77.csv")
+#--------------------------------------------------------------------------------------------------------------
 
 #combine mineral soils data with shapefile
 llpData=gpd.read_file(r"C:\Users\name\Desktop\folder\2018mineralSoils.csv")
@@ -46,7 +46,7 @@ WS77ff=WS77ff.drop({'Unnamed: 0'}, axis=1)
 WS77ff=gpd.GeoDataFrame(WS77ff, geometry='geometry')
 
 WS77ff.to_file("C:\\Users\\name\\Desktop\\file\\2018ffWS77.shp")
-
+#-----------------------------------------------------------------------------------------------------------------
 #combine ws77 and ws80 shapefiles, then add overstory data to new shapefile
 hg_pl77=gpd.read_file(r"C:\Users\name\Desktop\folder\WS77_Hugo_Inventory_Plots_2013\WS77_Hugo_Inventory_Plots_2013.shp")
 hg_pl80=gpd.read_file(r"C:\Users\name\Desktop\folder\WS80_Hugo_Inventory_Plots_2013\WS80_Hugo_Inventory_Plots_2013.shp")

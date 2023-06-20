@@ -23,7 +23,7 @@ geoWS77.to_file("C:\\Users\\name\\Desktop\\folder\\geoWS77.shp")
 geoWS77.to_csv("C:\\Users\\name\\Desktop\\folder\\geoWS77.csv")
 
 #combine mineral soils data with shapefile
-llpData=gpd.read_file(r"C:\Users\Carrie\Desktop\watershedStudy\soilsData\2018mineralSoils.csv")
+llpData=gpd.read_file(r"C:\Users\name\Desktop\folder\2018mineralSoils.csv")
 
 llpData.drop_duplicates()
 

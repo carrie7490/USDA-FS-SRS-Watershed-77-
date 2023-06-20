@@ -1,0 +1,34 @@
+import pandas as pd
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+
+#prepare data
+soils=pd.read_csv(
+   "C:\\Users\\name\\Desktop\\folder\\2018_treat_CNsums.csv",
+                     header = 0)
+
+ff=pd.read_csv(
+   "C:\\Users\\Carrie\\Desktop\\watershedStudy\\soilsData\\2018FF_treat_CNsums.csv",
+                     header = 0)
+
+df1 = [soils, ff]
+df2 = pd.concat(df1)
+
+df_sum =pd.DataFrame(df2
+             .groupby(['year', 'ws', 'treatm'])
+             .agg(
+             C_sum=pd.NamedAgg(column="C_Mg_ha_sum", aggfunc="sum"),
+             N_sum=pd.NamedAgg(column="N_Mg_ha_sum", aggfunc="sum")
+             
+              )
+)
+df_sum=df_sum.reset_index(drop=False)
+
+fig, axes=plt.subplots(1,2, figsize=(12,6))
+g1=sns.barplot(ax=axes[0], data=df_sum, x="treatm", y="C_sum", palette="mako",)
+g1.set(ylabel="Total Carbon (Mg/ha)", xlabel="")
+g2=sns.barplot(ax=axes[1], data=df_sum, x="treatm", y="N_sum", palette="mako",)
+g2.set(ylabel="Total Nitrogen (Mg/ha)", xlabel="")

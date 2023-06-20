@@ -54,8 +54,8 @@ geoLLP_50_75=geoLLP_50_75.drop({'geometry_y'}, axis=1)
 geoLLP_50_75=gpd.GeoDataFrame(geoLLP_50_75, geometry='geometry_x')
 geoLLP_50_75=geoLLP_50_75.rename_geometry('geometry')
 
-#generate layer for horizons 50cm to 75cm
-llp_75_100=pd.DataFrame(llpData.loc[((llpData['horizon'] =='50_75'))])
+#generate layer for horizons 75cm to 100cm
+llp_75_100=pd.DataFrame(llpData.loc[((llpData['horizon'] =='75_100'))])
 geoLLP_75_100=llp.merge(llp_75_100, on = 'plot')
 geoLLP_75_100=geoLLP_75_100.drop({'geometry_y'}, axis=1)
 geoLLP_75_100=gpd.GeoDataFrame(geoLLP_75_100, geometry='geometry_x')

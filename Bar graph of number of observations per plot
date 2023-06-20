@@ -1,0 +1,21 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+t0=pd.read_csv( "C:\\Users\\name\\Desktop\\folder\\OverstoryData.csv",
+                header = 0,                  
+                     dtype={'ws': 'str', 'plot':'str','year':object, 
+                'tree':str, 'history':object,
+              'species':'category', 'sp_cd':'category',
+              'dbh_cm':np.float64, 'tr_ht_m':np.float64
+              }    )
+
+t=pd.DataFrame(t0.loc[((t0['history']=='1'))]) #filters out all but live trees (history=1)
+t2=pd.DataFrame(t.loc[((t['year']=='2022'))]) #filters out all but 2022
+
+fig, ax=plt.subplots(figsize=(30,10))
+
+ax=sns.countplot(data=t2, x="plot", hue="ws", palette='mako')
+ax.set(xlabel='Plot', ylabel='Number of Trees', 
+      title='Live Trees Measured in 2022')

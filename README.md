@@ -6,7 +6,7 @@ Watershed 77 is located within the Santee EF and is
 currently being used to study forest treatment
 effects on forest production. 
 This repository contains scripts written to
-combine data for use in calculations and scripts for data visualization
+combine data, perform calculations, and generate data visualization
 of the treatment watershed (ws77) and the reference watershed (ws80).
 
 Examples of graphs created:

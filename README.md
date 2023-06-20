@@ -7,7 +7,7 @@ currently being used to study forest treatment
 effects on forest production. 
 This repository contains scripts written to
 combine data, perform calculations, and generate data visualization
-of the treatment watershed (ws77) and the reference watershed (ws80). This project was made possibly by the College of Charleston, SC and the USDA-FS-SRS.
+of the treatment watershed (ws77) and the reference watershed (ws80). This project was funded and managed by the College of Charleston, SC and the USDA-FS-SRS.
 
 Examples of graphs created:
 ![DBHws80swarm](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/7648b230-451f-4727-b37b-96062f5c4a43)

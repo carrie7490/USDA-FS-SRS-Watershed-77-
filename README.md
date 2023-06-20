@@ -8,3 +8,6 @@ effects on forest production.
 This repository contains scripts written to
 combine data for use in calculations and scripts for data visualization
 of the treatment watershed (ws77) and the reference watershed (ws80).
+
+Examples of graphs created:
+![DBHws80swarm](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/7648b230-451f-4727-b37b-96062f5c4a43)

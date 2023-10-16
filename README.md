@@ -4,7 +4,7 @@ and collects data from the Santee Experimental Forest
 located in the Francis Marion National Forest in South Carolina. 
 Watershed 77 is located within the Santee EF and is 
 currently being used to study forest treatment
-effects on forest production. 
+effects on forest production and effects of longleaf pine conversion on water resources and carbon squestration. 
 This repository contains scripts written to create shapefiles, 
 combine data, perform calculations, and generate data visualization
 of the treatment watershed (ws77) and the reference watershed (ws80). This project was funded and managed by the College of Charleston, SC and the USDA-FS-SRS.

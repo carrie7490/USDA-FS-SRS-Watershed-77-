@@ -10,13 +10,8 @@ combine data, perform calculations, and generate data visualization
 of the treatment watershed (ws77) and the reference watershed (ws80). This project was funded and managed by the College of Charleston, SC and the USDA-FS-SRS.
 
 Examples of graphs created:
-![DBHws80swarm](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/7648b230-451f-4727-b37b-96062f5c4a43)
 
-![Treatmentbar](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/3748274d-5bc3-410e-9e94-cdff48949665)
-
-![countPlots2022](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/7988088b-8977-4847-b8a8-85555f7d4064)
-
-![2018barCtreatHorizon](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/4a1a7b82-fac7-4079-8724-76bf14a1e19d)
-
-![2018CofPlots](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/ad6d566e-4293-4eee-8ba2-d01416bf9185)
-
+![DBHws80swarm](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/cd1254c1-6b00-46ad-be29-3ad84fa4e99e)
+![treat4](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/a1317bad-c601-452a-a2f6-77aa308b9930)
+![2018waheeCarbon](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/6349dbbe-dead-4a64-a75a-6bd18a8b4d59)
+![CNsumsTreat_bar2](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/97151596-e087-4269-97ed-efb066e2e5bc)

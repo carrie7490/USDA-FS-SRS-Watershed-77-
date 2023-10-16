@@ -18,7 +18,7 @@ df1 = [soils, ff]
 df2 = pd.concat(df1)
 
 df_sum =pd.DataFrame(df2
-             .groupby(['year', 'ws', 'treatm'])
+             .groupby(['year', 'ws', 'treatm', 's_type'])
              .agg(
              C_sum=pd.NamedAgg(column="C_Mg_ha_sum", aggfunc="sum"),
              N_sum=pd.NamedAgg(column="N_Mg_ha_sum", aggfunc="sum")
@@ -27,8 +27,15 @@ df_sum =pd.DataFrame(df2
 )
 df_sum=df_sum.reset_index(drop=False)
 
+df_sum
+#graph=sns.catplot(x="treatm", y='C_sum', palette="mako", kind="bar", data=df_sum)
+#graph.set(xlabel='Treatment type', ylabel='Carbon (Mg/ha)', 
+      #title='Total Carbon per treatment type in 2018')
+
 fig, axes=plt.subplots(1,2, figsize=(12,6))
-g1=sns.barplot(ax=axes[0], data=df_sum, x="treatm", y="C_sum", palette="mako",)
+g1=sns.barplot(ax=axes[0], data=df_sum, x="treatm", y="C_sum", palette="mako",hue="s_type",)
 g1.set(ylabel="Total Carbon (Mg/ha)", xlabel="")
-g2=sns.barplot(ax=axes[1], data=df_sum, x="treatm", y="N_sum", palette="mako",)
+g1.get_legend().remove()
+g2=sns.barplot(ax=axes[1], data=df_sum, x="treatm", y="N_sum", palette="mako",hue="s_type",)
 g2.set(ylabel="Total Nitrogen (Mg/ha)", xlabel="")
+g2.legend(loc="upper left",title="")

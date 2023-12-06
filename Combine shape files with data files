@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 %matplotlib inline
 
 #combine longleaf pine conversion plots with Hugo plots
-hg_pl77=gpd.read_file(r"C:\Users\name\Desktop\folder\WS77_Hugo_Inventory_Plots_2013\WS77_Hugo_Inventory_Plots_2013.shp")
+hg_pl77=gpd.read_file(r"C:\Users\name\Desktop\folder\WS77_Hugo_Inventory_Plots_2013.shp")
 llp=gpd.read_file(r"C:\Users\name\Desktop\folder\LLPC_corrected.shp")
 
 llp=llp.drop('POINT_X', axis=1)

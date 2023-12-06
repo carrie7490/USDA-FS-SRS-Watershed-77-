@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 #prepare data
+# file created in "Mineral soils data calculations 2018"
 soils=pd.read_csv(
    "C:\\Users\\name\\Desktop\\folder\\2018_treat_CNsums.csv",
                      header = 0)
-
+# file created in "Forest floor calculations"
 ff=pd.read_csv(
    "C:\\Users\\Carrie\\Desktop\\watershedStudy\\soilsData\\2018FF_treat_CNsums.csv",
                      header = 0)

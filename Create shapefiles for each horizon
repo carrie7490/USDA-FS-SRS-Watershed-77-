@@ -6,21 +6,21 @@ import geopandas as gpd
 import pandas as pd
 from sqlalchemy import create_engine
 %matplotlib inline
+# %matplotlib inline needed to view map in jupyter notebooks
 
-llp=gpd.read_file(r"C:\Users\name\Desktop\folder\\geoWS77.shp")
-llpData=gpd.read_file(r"C:\Users\name\Desktop\folder\2018mineralSoils.csv")
-
+llp=gpd.read_file(r"geoWS77.shp")
+llpData=gpd.read_file(r"2018mineralSoils.csv")
 llpData.drop_duplicates()
 llp.drop_duplicates()
 
 #generate layer for all horizons
-WS77soils=llp.merge(llpData, on = 'plot')
+WS77soils=llp.merge(llpData, on = 'plot') #merge data and shapefile using plot#
 WS77soils=WS77soils.drop({'geometry_y'}, axis=1)
-WS77soils=gpd.GeoDataFrame(WS77soils, geometry='geometry_x')
+WS77soils=gpd.GeoDataFrame(WS77soils, geometry='geometry_x') #create geodataframe using column geometry_x
 WS77soils=WS77soils.rename_geometry('geometry')
 
 #generate layer for horizons 0cm to 10cm
-llp_0_10=pd.DataFrame(llpData.loc[((llpData['horizon'] =='0_10'))])
+llp_0_10=pd.DataFrame(llpData.loc[((llpData['horizon'] =='0_10'))]) #select only depths 0 to 10 cm
 geoLLP_0_10=llp.merge(llp_0_10, on = 'plot')
 geoLLP_0_10=geoLLP_0_10.drop({'geometry_y'}, axis=1)
 geoLLP_0_10=gpd.GeoDataFrame(geoLLP_0_10, geometry='geometry_x')
@@ -61,12 +61,12 @@ geoLLP_75_100=geoLLP_75_100.drop({'geometry_y'}, axis=1)
 geoLLP_75_100=gpd.GeoDataFrame(geoLLP_75_100, geometry='geometry_x')
 geoLLP_75_100=geoLLP_75_100.rename_geometry('geometry')
 
-
-WS77soils.to_file("C:\\Users\\name\\Desktop\\folder\\2018WS77soils.shp")
-geoLLP_0_10.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_0_10\\2018soils_0_10.shp")
-geoLLP_10_20.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_10_20\\2018soils_10_20.shp")
-geoLLP_20_30.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_20_30\\2018soils_20_30.shp")
-geoLLP_30_50.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_30_50\\2018soils_30_50.shp")
-geoLLP_50_75.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_50_75\\2018soils_50_75.shp")
-geoLLP_75_100.to_file("C:\\Users\\name\\Desktop\\folder\\2018soilsCN_75_100\\2018soils_75_100.shp")
+#save new shapefiles
+WS77soils.to_file("2018WS77soils.shp")
+geoLLP_0_10.to_file("2018soils_0_10.shp")
+geoLLP_10_20.to_file("2018soils_10_20.shp")
+geoLLP_20_30.to_file("2018soils_20_30.shp")
+geoLLP_30_50.to_file("2018soils_30_50.shp")
+geoLLP_50_75.to_file("2018soils_50_75.shp")
+geoLLP_75_100.to_file("2018soils_75_100.shp")
 

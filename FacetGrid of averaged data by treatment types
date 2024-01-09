@@ -4,10 +4,11 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 %matplotlib inline
 import seaborn as sns
+# %matplotlib inline needed in jupyter notebook to view graph
 
 #prepare data
 Overstory=pd.read_csv(
-   "C:\\Users\\Carrie\\Desktop\\watershedStudy\\Overstory combined data\\OverstoryData.csv",
+   "OverstoryData.csv",
                     
                      header = 0,                  
                      dtype={'ws': 'str', 'plot':'str','year':object, 
@@ -29,8 +30,10 @@ t =pd.DataFrame(Overstory
              
               )
 )
-t=t.reset_index(drop=False)
-t['BM_Mg_ha']=((t.BM_kg_pl*10*2.471)/1000)
+t=t.reset_index(drop=False) #reset index created by grouping
+
+#new columns with calculations
+t['BM_Mg_ha']=((t.BM_kg_pl*10*2.471)/1000) 
 
 # cm^2/plot basal area to ((ba*10)*2.471))/10000 = m^2/ha
 t['BA_m2_ha']=((t.BA_sum*10*2.471)/10000)
@@ -38,7 +41,7 @@ t['BA_m2_ha']=((t.BA_sum*10*2.471)/10000)
 #tree count (tr_ct*10)*2.471) = trees/ha
 t['tr_ct_ha']=(t.tr_ct*10*2.471)
 
-
+# select only year = 2022 and history = 1
 t2=pd.DataFrame(t.loc[(t['year']=='2022')])
 t3=pd.DataFrame(t2.loc[(t['history']=='1')])
 
@@ -53,10 +56,10 @@ t4 =pd.DataFrame(t3
              
               )
 )
-t4=treat_sum.reset_index(drop=False)
+t4=t4.reset_index(drop=False)
 
-
-fig, axes=plt.subplots(2,2, figsize=(12,12))
+fig, axes=plt.subplots(2,2, figsize=(12,12)) # set up sub plots:2 rows and 2 columns
+# ax=axes[0,0]=1st column and 1st row; [0,1]=2nd column, first row; etc
 g1=sns.barplot(ax=axes[0,0], data=t4, x="treatment", y="dbh_Tavg", palette="mako",)
 g1.set(ylabel="Average DBH (cm)", xlabel="")
 g2=sns.barplot(ax=axes[0,1], data=t4, x="treatment", y="tr_ht_Tavg",palette="mako",)
@@ -65,3 +68,5 @@ g3=sns.barplot(ax=axes[1,0], data=t4, x="treatment", y="BA_avg", palette="mako",
 g3.set(ylabel="Basal Area (m2/ha)", xlabel="")
 g4=sns.barplot(ax=axes[1,1], data=t4, x="treatment", y="BM_avg", palette="mako",)
 g4.set(ylabel="Biomass (Mg/ha)", xlabel="")
+
+plt.savefig('treatNumBar')

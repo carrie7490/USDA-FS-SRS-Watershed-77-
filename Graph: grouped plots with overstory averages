@@ -69,4 +69,4 @@ g3.set(ylabel="Basal Area (m2/ha)", xlabel="")
 g4=sns.barplot(ax=axes[1,1], data=t4, x="treatment", y="BM_avg", palette="mako",)
 g4.set(ylabel="Biomass (Mg/ha)", xlabel="")
 
-plt.savefig('treatNumBar')
+plt.savefig('treatNumBar.png')

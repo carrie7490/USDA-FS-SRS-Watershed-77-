@@ -1,15 +1,15 @@
-import pandas as pd
-import numpy as np
+# this graph was used to analyze the data and was not included in the final paper
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-%matplotlib inline
+%matplotlib inline # needed in jupyter notebook to view graph
 import seaborn as sns
 
 #prepare data
 # file created in "Mineral soils data 2018"
 soils=pd.read_csv(
-   "C:\\Users\\Carrie\\Desktop\\watershedStudy\\soilsData\\2018mineralSoils.csv",
+   "2018mineralSoils.csv",
                    header = 0)
 
 gr=sns.FacetGrid(soils, col="plot", palette="mako", col_wrap=3)
 gr.map(sns.scatterplot, "C_Mg_ha", "horizon")
+plt.savefig('NumPlot')

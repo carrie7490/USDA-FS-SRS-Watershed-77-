@@ -1,0 +1,23 @@
+import psycopg2
+import requests
+from shapely.geometry import Point, Polygon, MultiPolygon, mapping
+import datetime
+import geopandas as gpd
+import pandas as pd
+from sqlalchemy import create_engine
+%matplotlib inline
+# need %matplotlib inline to view graphs
+
+#combine longleaf pine conversion plots with Hugo plots
+hg_pl77=gpd.read_file(r"WS77_Hugo_Inventory_Plots_2013.shp")
+llp=gpd.read_file(r"LLPC_corrected.shp")
+
+llp=llp.drop('POINT_X', axis=1)
+llp=llp.drop('POINT_Y', axis=1)
+hg_pl77['plot']=hg_pl77['NAME'].astype('str')
+llp['plot']=llp['plot_num'].astype('str')
+
+geoWS77=pd.concat([hg_pl77, llp])
+geoWS77=geoWS77.drop({'plot_num', 'NAME', 'OBJECTID', 'CATEGORY'}, axis=1)
+
+geoWS77.to_file("geoWS77.shp")

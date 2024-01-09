@@ -4,19 +4,19 @@ import matplotlib as mpl
 
 
 # load and prepare data
-soils_BD=pd.read_csv(
-   "C:\\Users\\Name\Desktop\\Folder\\LLSC_2018BD_soils.csv",
+soils_BD=pd.read_csv("LLSC_2018BD_soils.csv",
                      header = 0)
-soils_CHN=pd.read_csv(
-    "C:\\Users\\Name\\Desktop\\Folder\\LLCS_soil_CHN_2018.csv",
+soils_CHN=pd.read_csv("LLCS_soil_CHN_2018.csv",
            header = 0)
+
 # average bulk density (BD)
 soils_BD2 =pd.DataFrame(soils_BD
              .groupby(['treatm', 'ws', 's_type','plot', 's_depth_cm'])
              .agg(
              BD=pd.NamedAgg(column="BD_g_cm3", aggfunc="mean")
               ))
-soils_BD2=soils_BD2.reset_index(drop=False)
+soils_BD2=soils_BD2.reset_index(drop=False) 
+
 #average analyte percent
 soils_CHN2 =pd.DataFrame(soils_CHN 
              .groupby(['ws', 'plot', 's_depth_cm'])
@@ -60,5 +60,5 @@ df3 =pd.DataFrame(df
              N_Mg_ha_sum=pd.NamedAgg(column="N_Mg_ha", aggfunc="sum")
               )
 )
-df3.to_csv("C:\\Users\\Name\\Desktop\\Folder\\2018_treat_CNsums.csv")
+df3.to_csv("2018_treat_CNsums.csv")
 

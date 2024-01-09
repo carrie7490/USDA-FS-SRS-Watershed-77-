@@ -12,6 +12,11 @@ of the treatment watershed (ws77) and the reference watershed (ws80). This proje
 Examples of graphs created:
 
 ![DBHws80swarm](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/cd1254c1-6b00-46ad-be29-3ad84fa4e99e)
-![treat4](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/a1317bad-c601-452a-a2f6-77aa308b9930)
-![2018waheeCarbon](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/6349dbbe-dead-4a64-a75a-6bd18a8b4d59)
-![CNsumsTreat_bar2](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/97151596-e087-4269-97ed-efb066e2e5bc)
+![BA_bar](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/7f43aa94-aa2e-4a3a-b680-6f3874e0e5aa)
+
+![BAtreatBar](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/12d53628-1bb8-43d5-8e3f-e19b952c2e4d)
+![treat4](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/e16d6e35-d6de-41f9-b41a-475c627453d6)
+
+
+![2018barCtreatHorizon](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/103efc55-7181-4f66-b2bf-cd200a80aeda)
+![2018barNtreatHorizon](https://github.com/carrie7490/USDA-FS-SRS-Watershed-77-/assets/61474761/ac21b260-f27b-430f-b1a7-af0d9b76f71d)

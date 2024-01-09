@@ -4,10 +4,7 @@ import matplotlib as mpl
 
 
 # load and prepare data
-Hugo=pd.read_csv(
-   "C:\\Users\\Name\Desktop\\Folder\\1991_2022_Hugo.csv",
-                    
-                     header = 0,                  
+Hugo=pd.read_csv("1991_2022_Hugo.csv", header = 0,                  
                      dtype={'ws': 'str', 'plot':'str','year':'str', 
                 'tree':'str', 'history':'str',
               'species':'category', 'sp_cd':'category',
@@ -15,10 +12,7 @@ Hugo=pd.read_csv(
               }                    
                     )
 
-LLPC=pd.read_csv(
-   "C:\\Users\\Name\\Desktop\\folder\\1991_2022_LLP.csv",
-                    
-                     header = 0,                  
+LLPC=pd.read_csv("1991_2022_LLP.csv",header = 0,                  
                      dtype={'ws': 'str', 'plot':'str','year':'str', 
                 'tree':'str', 'history':'str',
               'species':'category', 'sp_cd':'category',
@@ -26,10 +20,7 @@ LLPC=pd.read_csv(
               }                    
                     )
 
-treat=pd.read_csv(
-   "C:\\Users\\Name\\Desktop\\folder\\2022treatTypes.csv",
-                    
-                     header = 0,
+treat=pd.read_csv("2022treatTypes.csv", header = 0,
     dtype={'ws': 'str', 'plot':'str', 'year':'str',
             'tree':'str', 'history':'str',
               'species':'category', 'sp_cd':'category',
@@ -51,16 +42,20 @@ pi=np.pi
 #add Basal area column 
 Overstory['BA']= pi*r*r
 
-#add BM column
+#select only specified numbers in column sp_cd
 sw=Overstory.loc[Overstory['sp_cd'].isin(['131','121','115','110','60','100','222','221'])]
+#variable
 y=sw.dbh_cm
+#calculation
 def conifBM(*args):
     x= [0.5 + ((15000 * y**2.7)/(y**2.7 + 364946))]
     return x
 
+#convert calculation to correct format to add to dataframe
 biomass = (np.squeeze(conifBM()))
 sw['biomass']=biomass.tolist()
 
+#select all but (~) specified in column sp_cd
 hw=Overstory.loc[~Overstory['sp_cd'].isin(['131','121','115','110','60','100','222','221'])]
 hw_dbh=hw.dbh_cm
 def hardwBM(*args):
@@ -93,6 +88,8 @@ pl_sum=pl_sum.reset_index(drop=False)
 #1plot=1/10 acre
 # 1cm^2 = 0.0001m^2
 #1kg=0.001megagram
+
+#add columns with calculations
 #kg/plot convert biomass  ((biomass*10)*2.471))/1000) Mg/ha
 pl_sum['BM_Mg_ha']=((pl_sum.BM_kg_pl*10*2.471)/1000)
 
@@ -120,7 +117,7 @@ ws_sum =pd.DataFrame(pl_sum
              BM_stDev=pd.NamedAgg(column="BM_Mg_ha", aggfunc="std")
               )
 )
-ws_sum.round(1)
+ws_sum.round(1) #round to 1 decimal place
 
 #add Standard error of mean (SEM) calculations
 #SEM per plot counts
@@ -139,7 +136,7 @@ ws_sum['BM_SEM_obs']=ws_sum.BM_stDev/(ws_sum.obs_ct**0.5)
 
 ws_sum=ws_sum.reset_index(drop=False)
 
-#create table of live and necromass from 2018 and 2022
+#create table of live and necromass (history 1 and 2) from 2018 and 2022
 
 t=ws_sum[['ws', 'year','history', 'tr_ct_ha', 'dbh_Tavg', 'tr_ht_Tavg',
           'BA_avg', 'BM_avg']].copy()
@@ -152,12 +149,12 @@ t2=pd.DataFrame(t.loc[((t['year']=='2018')|
          (t['year']=='2022'))])
 
 
-#pivot_table
+#flip table so that value vars are now rows
 t3=pd.melt(t2, id_vars=['ws', 'year','history'], value_vars=['tr_ct_ha', 'dbh_Tavg', 'tr_ht_Tavg', 
                                                            'BA_avg', 'BM_avg'], value_name='data')
 
 
-
+#set index as value vars (variable) and history, columns as ws and year, add data in variable index
 pivotWS=t3.pivot_table(index=['history','variable'],
               columns=['ws', 'year'],
               values=['data'], margins=True)
@@ -196,9 +193,9 @@ treat_sum =pd.DataFrame(t6
              BM_avg=pd.NamedAgg(column="BM_Mg_ha", aggfunc="mean")
 ))
 
-ws_sum.to_csv("C:\\Users\\name\\Desktop\\folder\\ws_avgs_1991_2022.csv")
-Overstory2.to_csv("C:\\Users\\name\\Desktop\\folder\\OverstoryData.csv")
-pl_sum.to_csv("C:\\Users\\name\\Desktop\\folder\\pl_sum.csv")
-pivotWS.to_csv("C:\\Users\\Carrie\\Desktop\\folder\\pivot_ws_avgs_2018_2022.csv")
-treat_sum.to_csv("C:\\Users\\Carrie\\Desktop\\folder\\treat_avgs.csv")
+ws_sum.to_csv("ws_avgs_1991_2022.csv")
+Overstory2.to_csv("OverstoryData.csv")
+pl_sum.to_csv("pl_sum.csv")
+pivotWS.to_csv("pivot_ws_avgs_2018_2022.csv")
+treat_sum.to_csv("treat_avgs.csv")
 

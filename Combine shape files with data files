@@ -6,10 +6,11 @@ import geopandas as gpd
 import pandas as pd
 from sqlalchemy import create_engine
 %matplotlib inline
+# need %matplotlib inline to view graphs
 
 #combine longleaf pine conversion plots with Hugo plots
-hg_pl77=gpd.read_file(r"C:\Users\name\Desktop\folder\WS77_Hugo_Inventory_Plots_2013.shp")
-llp=gpd.read_file(r"C:\Users\name\Desktop\folder\LLPC_corrected.shp")
+hg_pl77=gpd.read_file(r"WS77_Hugo_Inventory_Plots_2013.shp")
+llp=gpd.read_file(r"LLPC_corrected.shp")
 
 llp=llp.drop('POINT_X', axis=1)
 llp=llp.drop('POINT_Y', axis=1)
@@ -22,18 +23,8 @@ geoWS77=geoWS77.drop({'plot_num', 'NAME', 'OBJECTID', 'CATEGORY'}, axis=1)
 geoWS77.to_file("C:\\Users\\name\\Desktop\\folder\\geoWS77.shp")
 #--------------------------------------------------------------------------------------------------------------
 
-#combine mineral soils data with shapefile
-llpData=gpd.read_file(r"C:\Users\name\Desktop\folder\2018mineralSoils.csv")
-
-llpData.drop_duplicates()
-
-#generate layer for all horizons
-WS77soils=geoWS77.merge(llpData, on = 'plot')
-WS77soils=gpd.GeoDataFrame(WS77soils, geometry='geometry_x')
-WS77soils=WS77soils.rename_geometry('geometry')
-
 #shapefile combined with forest floor data
-ff=pd.read_csv("C:\\Users\\name\\Desktop\\file\\2018FFdata.csv")
+ff=pd.read_csv("2018FFdata.csv")
 ff.drop_duplicates()
 geoWS77.drop_duplicates()
 geoWS77['plot']=geoWS77['plot'].astype('str')
@@ -45,13 +36,13 @@ WS77ff=geoWS77.merge(ff, on = 'plot')
 WS77ff=WS77ff.drop({'Unnamed: 0'}, axis=1)
 WS77ff=gpd.GeoDataFrame(WS77ff, geometry='geometry')
 
-WS77ff.to_file("C:\\Users\\name\\Desktop\\file\\2018ffWS77.shp")
+WS77ff.to_file("2018ffWS77.shp")
 #-----------------------------------------------------------------------------------------------------------------
 #combine ws77 and ws80 shapefiles, then add overstory data to new shapefile
-hg_pl77=gpd.read_file(r"C:\Users\name\Desktop\folder\WS77_Hugo_Inventory_Plots_2013\WS77_Hugo_Inventory_Plots_2013.shp")
-hg_pl80=gpd.read_file(r"C:\Users\name\Desktop\folder\WS80_Hugo_Inventory_Plots_2013\WS80_Hugo_Inventory_Plots_2013.shp")
-llp=gpd.read_file(r"C:\Users\name\Desktop\folder\LLPC_corrected\LLPC_corrected.shp")
-OverstoryData=gpd.read_file(r"C:\Users\name\Desktop\folder\OverstoryData.csv",
+hg_pl77=gpd.read_file(r"WS77_Hugo_Inventory_Plots_2013.shp")
+hg_pl80=gpd.read_file(r"WS80_Hugo_Inventory_Plots_2013.shp")
+llp=gpd.read_file(r"LLPC_corrected.shp")
+OverstoryData=gpd.read_file(r"OverstoryData.csv",
                            header = 0,
                             dtype={'ws': 'str', 'plot':'str','year':'datetime64[ns]',
                                    'tree':'str', 'history':'category',
@@ -60,7 +51,7 @@ OverstoryData=gpd.read_file(r"C:\Users\name\Desktop\folder\OverstoryData.csv",
                                    'BA_m2_ha':np.float64, 'BM_Mg_ha': np.float64
                }                    
                     )
-OverstoryData.round(2)
+OverstoryData.round(2) #round to 2 decimals
 #drop second set of geometry points and only use 'geometry_x'
 llp=llp.drop('POINT_X', axis=1)
 llp=llp.drop('POINT_Y', axis=1)
@@ -91,8 +82,8 @@ geoWS['tree']=geoWS['tree'].astype('str')
 
 geoWS.drop_duplicates(subset=['year', 'ws', 'plot', 'history', 'tree'], inplace=True, keep='last')
 
-geoWS1.to_csv("C:\\Users\\name\\Desktop\\folder\\geoWS\\geoWS1.shp")
-geoWS.to_file("C:\\Users\\name\\Desktop\\folder\\geoWS\\WSdataShape\\WSdataShape.shp")
-geoWS.to_csv("C:\\Users\\name\\Desktop\\folder\\geoWS\\WSgeoData.csv")
+geoWS1.to_csv("geoWS1.shp")
+geoWS.to_file("WSdataShape.shp")
+geoWS.to_csv("WSgeoData.csv")
 geoWS.plot()
 

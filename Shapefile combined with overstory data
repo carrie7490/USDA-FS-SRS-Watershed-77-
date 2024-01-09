@@ -1,0 +1,61 @@
+import psycopg2
+import requests
+from shapely.geometry import Point, Polygon, MultiPolygon, mapping
+import datetime
+import geopandas as gpd
+import pandas as pd
+from sqlalchemy import create_engine
+%matplotlib inline
+# need %matplotlib inline to view graphs
+
+
+
+#combine ws77 and ws80 shapefiles, then add overstory data to new shapefile
+hg_pl77=gpd.read_file(r"WS77_Hugo_Inventory_Plots_2013.shp")
+hg_pl80=gpd.read_file(r"WS80_Hugo_Inventory_Plots_2013.shp")
+llp=gpd.read_file(r"LLPC_corrected.shp")
+OverstoryData=gpd.read_file(r"OverstoryData.csv",
+                           header = 0,
+                            dtype={'ws': 'str', 'plot':'str','year':'datetime64[ns]',
+                                   'tree':'str', 'history':'category',
+                                   'species':'category', 'sp_cd':'category',
+                                   'dbh_avg':np.float64, 'tr_ht_avg':np.float64,
+                                   'BA_m2_ha':np.float64, 'BM_Mg_ha': np.float64
+               }                    
+                    )
+OverstoryData.round(2) #round to 2 decimals
+#drop second set of geometry points and only use 'geometry_x'
+llp=llp.drop('POINT_X', axis=1)
+llp=llp.drop('POINT_Y', axis=1)
+
+
+hg_pl77['NAME']=hg_pl77['NAME'].astype('str')
+hg_pl80['NAME']=hg_pl80['NAME'].astype('str')
+llp['plot_num']=llp['plot_num'].astype('str')
+
+hg_pl77['plotNum']='77_'+hg_pl77.NAME
+hg_pl80['plotNum']='80_'+hg_pl80.NAME
+llp['plotNum']='77_' +llp.plot_num
+geoWS1=pd.concat([hg_pl77, hg_pl80, llp])
+
+OverstoryData['plotNum']=OverstoryData['ws']+'_'+OverstoryData['plot']
+
+geoWS=geoWS1.merge(OverstoryData, on = 'plotNum')
+geoWS=geoWS.drop({'geometry_y', 'plot_num', 'NAME', 'OBJECTID', 'field_1'}, axis=1)
+
+geoWS=gpd.GeoDataFrame(geoWS, geometry='geometry_x')
+geoWS=geoWS.rename_geometry('geometry')
+
+geoWS['year']=geoWS['year'].astype('str')
+geoWS['ws']=geoWS['ws'].astype('str')
+geoWS['plot']=geoWS['plot'].astype('str')
+geoWS['history']=geoWS['history'].astype('str')
+geoWS['tree']=geoWS['tree'].astype('str')
+
+geoWS.drop_duplicates(subset=['year', 'ws', 'plot', 'history', 'tree'], inplace=True, keep='last')
+
+geoWS1.to_csv("geoWS1.shp")
+geoWS.to_file("WSdataShape.shp")
+geoWS.to_csv("WSgeoData.csv")
+geoWS.plot()
+

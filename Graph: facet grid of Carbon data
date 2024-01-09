@@ -12,4 +12,4 @@ soils=pd.read_csv(
 
 gr=sns.FacetGrid(soils, col="plot", palette="mako", col_wrap=3)
 gr.map(sns.scatterplot, "C_Mg_ha", "horizon")
-plt.savefig('NumPlot')
+plt.savefig('NumPlot.')

@@ -1,0 +1,24 @@
+import psycopg2
+import requests
+from shapely.geometry import Point, Polygon, MultiPolygon, mapping
+import datetime
+import geopandas as gpd
+import pandas as pd
+from sqlalchemy import create_engine
+%matplotlib inline
+# need %matplotlib inline to view graphs
+
+#shapefile combined with forest floor data
+ff=pd.read_csv("2018FFdata.csv")
+ff.drop_duplicates()
+geoWS77.drop_duplicates()
+geoWS77['plot']=geoWS77['plot'].astype('str')
+geoWS77['plot']=geoWS77['plot'].astype('str')
+geoWS77.dtypes
+
+#generate layer for forest floor
+WS77ff=geoWS77.merge(ff, on = 'plot')
+WS77ff=WS77ff.drop({'Unnamed: 0'}, axis=1)
+WS77ff=gpd.GeoDataFrame(WS77ff, geometry='geometry')
+
+WS77ff.to_file("2018ffWS77.shp")

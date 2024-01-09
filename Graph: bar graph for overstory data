@@ -1,0 +1,78 @@
+import pandas as pd
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+#matplotlib inline needed to view graphs in jupyter notebook
+
+#prepare data
+Overstory=pd.read_csv("OverstoryData.csv", header = 0,                  
+                     dtype={'ws': 'str', 'plot':'str','year':object, 
+                'tree':'str', 'history':object,
+              'species':'category', 'sp_cd':'category',
+              'dbh_cm':np.float64, 'tr_ht_m':np.float64
+              }                    
+                    )
+
+#create table of averages and sums
+pl_s =pd.DataFrame(Overstory
+             .groupby(['year', 'ws', 'history','plot'])
+             .agg(
+             dbh_avg=pd.NamedAgg(column="dbh_cm", aggfunc="mean"),
+             tr_ct=pd.NamedAgg(column="dbh_cm", aggfunc="count"),
+             tr_ht_avg=pd.NamedAgg(column="tr_ht_m", aggfunc="mean"),
+             BA_sum=pd.NamedAgg(column="BA", aggfunc="sum"),
+             BM_kg_pl=pd.NamedAgg(column="biomass", aggfunc="sum")
+             
+              )
+)
+
+#2.471 acres=1ha
+#1plot=1/10 acre
+# 1cm^2 = 0.0001m^2
+#1kg=0.001megagram
+
+#create new column with calculations
+#kg/plot convert biomass  ((biomass*10)*2.471))/1000) Mg/ha
+pl_s['BM_Mg_ha']=((pl_s.BM_kg_pl*10*2.471)/1000)
+
+# cm^2/plot basal area to ((ba*10)*2.471))/10000 = m^2/ha
+pl_s['BA_m2_ha']=((pl_s.BA_sum*10*2.471)/10000)
+
+#tree count (tr_ct*10)*2.471) = trees/ha
+pl_s['tr_ct_ha']=(pl_s.tr_ct*10*2.471)
+
+
+#create table of averages and sums
+ws_sum =pd.DataFrame(pl_s
+             .groupby(['year', 'ws', 'history'])
+             .agg(
+             dbh_Tavg=pd.NamedAgg(column="dbh_avg", aggfunc="mean"),
+             tr_ht_Tavg=pd.NamedAgg(column="tr_ht_avg", aggfunc="mean"),
+             tr_ct_ha=pd.NamedAgg(column="tr_ct_ha", aggfunc="mean"),
+             BA_avg=pd.NamedAgg(column="BA_m2_ha", aggfunc="mean"),
+             BM_avg=pd.NamedAgg(column="BM_Mg_ha", aggfunc="mean")
+             
+              )
+)
+ws_sum.round(2) #round to 2 decimals
+
+
+#create table of live and necromass from 2018 and 2022
+ws_sum=ws_sum.reset_index(drop=False)
+ws_sum.history=ws_sum['history'].replace({1:"Live Biomass", '2':"Necromass", '2?':"Necromass",
+                                          '11':"Live Biomass",
+                                      '1':"Live Biomass", 2:"Necromass"})
+
+#select only history with live and necromass and years 2018 and 2022
+t=ws_sum.loc[((ws_sum['history']=='Live Biomass')|
+          (ws_sum['history']=='Necromass'))]
+
+t2=pd.DataFrame(t.loc[((t['year']=='2018')|
+         (t['year']=='2022'))])
+
+
+baG=sns.catplot(x="year", y='tr_ht_Tavg', hue="history", palette="mako",col="ws", kind="bar", data=t2)
+baG.set_axis_labels("", "Average Tree hieght (m)")
+plt.savefig('tr_ht_bar.png')

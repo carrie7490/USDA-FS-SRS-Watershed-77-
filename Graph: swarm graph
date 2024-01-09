@@ -8,8 +8,7 @@ plt=reload(plt)
 import seaborn as sns
 
 #prepare data
-Overstory=pd.read_csv(
-   "C:\\Users\\name\\Desktop\\folder\\OverstoryData.csv",
+Overstory=pd.read_csv("OverstoryData.csv",
                      header = 0,                  
                      dtype={'ws': 'str', 'plot':'str','year':object, 
                 'tree':'str', 'history':str,
@@ -59,15 +58,12 @@ ws_sum =pd.DataFrame(pl_s
 )
 ws_sum.round(2)
 
-#create table of live and standing dead from 2018 and 2022
+#create table of average live biomass and average necromass from 2018 and 2022
 ws_sum=ws_sum.reset_index(drop=False)
 pl_s=pl_s.reset_index(drop=False)
-
+#replace numerical 1 and str 1 with Average live biomass, etc
 ws_sum.history=ws_sum['history'].replace({1:"Average live biomass", '2':"Average necromass", 
                                           '1':"Average live biomass", 2:"Average necromass"})
-Overstory.history=Overstory['history'].replace({1:"Live trees", '2':"Standing dead trees", 
-                                      '1':"Live trees", 2:"Standing dead trees"})
-
 
 t1=ws_sum.loc[((ws_sum['history']=="Average live biomass"))|
          (ws_sum['history']=='Average necromass')]
@@ -77,6 +73,9 @@ t1a=pd.DataFrame(t1.loc[((t1['year']=='2018')|
 t1b=pd.DataFrame(t1a.loc[((t1a['ws']=='77'))])
 t1c=pd.DataFrame(t1a.loc[((t1a['ws']=='80'))])
 
+#create table of live trees and standing dead trees
+Overstory.history=Overstory['history'].replace({1:"Live trees", '2':"Standing dead trees", 
+                                      '1':"Live trees", 2:"Standing dead trees"})
 t2=Overstory.loc[((Overstory['history']=="Live trees"))|
          (Overstory['history']=='Standing dead trees')]
 
@@ -97,4 +96,4 @@ plt.ylabel("DBH (cm)")
 plt.title("WS80 DBH (cm) averages overlain with collected data used for the average totals")
 plt.legend(loc=1, ncol=2)
 
-#plt.savefig('C:\\Users\\name\\Desktop\\folder\\DBHws80swarm.png')
+plt.savefig('DBHws80swarm.png')

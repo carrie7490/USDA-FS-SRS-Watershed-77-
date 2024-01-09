@@ -2,22 +2,24 @@ import pandas as pd
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-%matplotlib inline
+%matplotlib inline # needed in jupyter notebook to view plots
 import seaborn as sns
 
 #prepare data
 # file created in "Mineral soils data calculations 2018"
 soils=pd.read_csv(
-   "C:\\Users\\name\\Desktop\\folder\\2018_treat_CNsums.csv",
+   "2018_treat_CNsums.csv",
                      header = 0)
 # file created in "Forest floor calculations"
 ff=pd.read_csv(
-   "C:\\Users\\Carrie\\Desktop\\watershedStudy\\soilsData\\2018FF_treat_CNsums.csv",
+   "2018FF_treat_CNsums.csv",
                      header = 0)
 
+#combine to csv files into one dataframe
 df1 = [soils, ff]
 df2 = pd.concat(df1)
 
+# sum carbon and nitrogen amounts by treatment and soil type
 df_sum =pd.DataFrame(df2
              .groupby(['year', 'ws', 'treatm', 's_type'])
              .agg(
@@ -26,17 +28,15 @@ df_sum =pd.DataFrame(df2
              
               )
 )
-df_sum=df_sum.reset_index(drop=False)
+df_sum=df_sum.reset_index(drop=False) #reset index created by grouping
 
-df_sum
-#graph=sns.catplot(x="treatm", y='C_sum', palette="mako", kind="bar", data=df_sum)
-#graph.set(xlabel='Treatment type', ylabel='Carbon (Mg/ha)', 
-      #title='Total Carbon per treatment type in 2018')
 
-fig, axes=plt.subplots(1,2, figsize=(12,6))
+fig, axes=plt.subplots(1,2, figsize=(12,6)) #set up two graphs with specified figure size
 g1=sns.barplot(ax=axes[0], data=df_sum, x="treatm", y="C_sum", palette="mako",hue="s_type",)
 g1.set(ylabel="Total Carbon (Mg/ha)", xlabel="")
-g1.get_legend().remove()
+g1.get_legend().remove() #remove the legend from this plot so it doesn't appear in both
 g2=sns.barplot(ax=axes[1], data=df_sum, x="treatm", y="N_sum", palette="mako",hue="s_type",)
 g2.set(ylabel="Total Nitrogen (Mg/ha)", xlabel="")
-g2.legend(loc="upper left",title="")
+g2.legend(loc="upper left",title="") #specify where legeng is placed
+
+plt.savefig('CNsumsTreat')

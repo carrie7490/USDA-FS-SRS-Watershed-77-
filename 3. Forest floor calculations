@@ -4,14 +4,11 @@ import matplotlib as mpl
 
 
 # load and prepare data
-FF_samp=pd.read_csv(
-  "C:\\Users\\name\\Desktop\\folder\\LLCS2018FF.csv",
+FF_samp=pd.read_csv(LLCS2018FF.csv",
                      header = 0)
-FFash=pd.read_csv(
-   "C:\\Users\\name\\Desktop\\folder\\LLCS_FF_ash_2018.csv",
+FFash=pd.read_csv(LLCS_FF_ash_2018.csv",
                      header = 0)
-FF_CHN=pd.read_csv(
-   "C:\\Users\\name\\Desktop\\folder\\LLCS_2018FF_CHN.csv",
+FF_CHN=pd.read_csv(LLCS_2018FF_CHN.csv",
                      header = 0)
 
 
@@ -28,7 +25,7 @@ FFdata['C_Mg_ha']=FFdata.c_per*(FFdata.mass_Mg_ha/100)
 FFdata['N_Mg_ha']=FFdata.n_per*(FFdata.mass_Mg_ha/100)
 
 
-FFdata.to_csv("C:\\Users\\name\\Desktop\\folder\\2018FFdata.csv")
+FFdata.to_csv("2018FFdata.csv")
 
 df2 =pd.DataFrame(FFdata
              .groupby(['year','ws', 'plot'])
@@ -38,7 +35,7 @@ df2 =pd.DataFrame(FFdata
              LOI_avg=pd.NamedAgg(column="loi", aggfunc="mean")
               )
 )
-df2.to_csv("C:\\Users\\name\\Desktop\\foler\\2018FF_CNsums.csv")
+df2.to_csv("2018FF_CNsums.csv")
 
 df =pd.DataFrame(FFdata
              .groupby(['year','ws', 'treatm'])
@@ -47,4 +44,4 @@ df =pd.DataFrame(FFdata
              N_Mg_ha_sum=pd.NamedAgg(column="N_Mg_ha", aggfunc="sum")
               )
 )
-df3.to_csv("C:\\Users\\name\\Desktop\\folder\\2018FF_treat_CNsums.csv")
+df3.to_csv("2018FF_treat_CNsums.csv")

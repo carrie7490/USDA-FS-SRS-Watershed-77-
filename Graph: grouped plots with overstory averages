@@ -6,11 +6,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 # %matplotlib inline needed in jupyter notebook to view graph
 
-#prepare data
-Overstory=pd.read_csv(
-   "OverstoryData.csv",
-                    
-                     header = 0,                  
+# import data with specified data types
+Overstory=pd.read_csv("OverstoryData.csv", header = 0,                  
                      dtype={'ws': 'str', 'plot':'str','year':object, 
                 'tree':'str', 'history':object,
               'species':'category', 'sp_cd':'category',
@@ -45,6 +42,7 @@ t['tr_ct_ha']=(t.tr_ct*10*2.471)
 t2=pd.DataFrame(t.loc[(t['year']=='2022')])
 t3=pd.DataFrame(t2.loc[(t['history']=='1')])
 
+# average by treatment type
 t4 =pd.DataFrame(t3
              .groupby(['treatment'])
              .agg(
@@ -58,7 +56,9 @@ t4 =pd.DataFrame(t3
 )
 t4=t4.reset_index(drop=False)
 
-fig, axes=plt.subplots(2,2, figsize=(12,12)) # set up sub plots:2 rows and 2 columns
+# set up 4 blank plots, 2 columns and 2 rows
+fig, axes=plt.subplots(2,2, figsize=(12,12)) 
+
 # ax=axes[0,0]=1st column and 1st row; [0,1]=2nd column, first row; etc
 g1=sns.barplot(ax=axes[0,0], data=t4, x="treatment", y="dbh_Tavg", palette="mako",)
 g1.set(ylabel="Average DBH (cm)", xlabel="")
@@ -69,4 +69,5 @@ g3.set(ylabel="Basal Area (m2/ha)", xlabel="")
 g4=sns.barplot(ax=axes[1,1], data=t4, x="treatment", y="BM_avg", palette="mako",)
 g4.set(ylabel="Biomass (Mg/ha)", xlabel="")
 
+# export graph as a png
 plt.savefig('treatNumBar.png')

@@ -6,16 +6,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 #prepare data
-# file created in "Mineral soils data calculations 2018"
-soils=pd.read_csv(
-   "2018_treat_CNsums.csv",
+# file created in "Calculations: Mineral soils data 2018"
+soils=pd.read_csv("2018_treat_CNsums.csv",
                      header = 0)
 # file created in "Forest floor calculations"
-ff=pd.read_csv(
-   "2018FF_treat_CNsums.csv",
+ff=pd.read_csv("2018FF_treat_CNsums.csv",
                      header = 0)
 
-#combine to csv files into one dataframe
+#combine csv files into one dataframe
 df1 = [soils, ff]
 df2 = pd.concat(df1)
 
@@ -30,14 +28,14 @@ df_sum =pd.DataFrame(df2
 )
 df_sum=df_sum.reset_index(drop=False) #reset index created by grouping
 
-#set up graphs in columns: 1 = # of rows, 2 = # of columns
+#set up two blank plots; one row and two columns
 fig, axes=plt.subplots(1,2, figsize=(12,6))
-   # axes position 0 = 1st row and 1st column
+   # Plot graphs: axes position 0 = 1st row and 1st column; 1 2nd row and 1st column
 g1=sns.barplot(ax=axes[0], data=df_sum, x="treatm", y="C_sum", palette="mako",hue="s_type",)
 g1.set(ylabel="Total Carbon (Mg/ha)", xlabel="")
 g1.get_legend().remove() #remove the legend from this plot so it doesn't appear in both
 g2=sns.barplot(ax=axes[1], data=df_sum, x="treatm", y="N_sum", palette="mako",hue="s_type",)
 g2.set(ylabel="Total Nitrogen (Mg/ha)", xlabel="")
 g2.legend(loc="upper left",title="") #specify where legend is placed
-
+#export graph as png
 plt.savefig('CNsumsTreat.png')

@@ -18,15 +18,16 @@ FFmass =pd.DataFrame(FF_samp
                  avg_g_cm2=pd.NamedAgg(column="FF_mass_g_cm2", aggfunc="mean") )
 )
 FFmass=FFmass.reset_index(drop=False)
-
+# merge tables and add columns with calculations
 FFdata=(pd.merge(FFmass, FFash, on=['plot','ff_layer']).merge(FF_CHN, on=['plot','ff_layer']))
 FFdata['mass_Mg_ha']=FFdata.avg_g_cm2*100
 FFdata['C_Mg_ha']=FFdata.c_per*(FFdata.mass_Mg_ha/100)
 FFdata['N_Mg_ha']=FFdata.n_per*(FFdata.mass_Mg_ha/100)
 
-
+# export table
 FFdata.to_csv("2018FFdata.csv")
 
+# sum by plot number carbon and nitrogen, average LOI
 df2 =pd.DataFrame(FFdata
              .groupby(['year','ws', 'plot'])
              .agg(
@@ -35,8 +36,10 @@ df2 =pd.DataFrame(FFdata
              LOI_avg=pd.NamedAgg(column="loi", aggfunc="mean")
               )
 )
+#export table
 df2.to_csv("2018FF_CNsums.csv")
 
+# sum by treatment type carbon and nitrogen
 df =pd.DataFrame(FFdata
              .groupby(['year','ws', 'treatm'])
              .agg(

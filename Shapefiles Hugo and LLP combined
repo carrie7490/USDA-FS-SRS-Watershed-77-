@@ -8,16 +8,16 @@ from sqlalchemy import create_engine
 %matplotlib inline
 # need %matplotlib inline to view graphs
 
-#combine longleaf pine conversion plots with Hugo plots
+#import shapefiles
 hg_pl77=gpd.read_file(r"WS77_Hugo_Inventory_Plots_2013.shp")
 llp=gpd.read_file(r"LLPC_corrected.shp")
-
+# drop x and y coordinates; use geometry column for geometry
 llp=llp.drop('POINT_X', axis=1)
 llp=llp.drop('POINT_Y', axis=1)
 hg_pl77['plot']=hg_pl77['NAME'].astype('str')
 llp['plot']=llp['plot_num'].astype('str')
-
+#merge the shapefiles and drop unnecessary columns
 geoWS77=pd.concat([hg_pl77, llp])
 geoWS77=geoWS77.drop({'plot_num', 'NAME', 'OBJECTID', 'CATEGORY'}, axis=1)
-
+#export shapefile
 geoWS77.to_file("geoWS77.shp")

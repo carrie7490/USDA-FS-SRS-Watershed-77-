@@ -12,7 +12,7 @@ from sqlalchemy import create_engine
 ff=pd.read_csv("2018FFdata.csv")
 ff.drop_duplicates()
 # import shapefile
-geoWS77=gdp.read_file(r"geoWS77.shp")
+geoWS77=gpd.read_file(r"geoWS77.shp")
 geoWS77.drop_duplicates()
 geoWS77['plot']=geoWS77['plot'].astype('str')
 geoWS77['plot']=geoWS77['plot'].astype('str')

@@ -60,5 +60,6 @@ df3 =pd.DataFrame(df
              N_Mg_ha_sum=pd.NamedAgg(column="N_Mg_ha", aggfunc="sum")
               )
 )
+#export table
 df3.to_csv("2018_treat_CNsums.csv")
 

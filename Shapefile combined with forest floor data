@@ -11,12 +11,11 @@ from sqlalchemy import create_engine
 # import data
 ff=pd.read_csv("2018FFdata.csv")
 ff.drop_duplicates()
-# import shape
-geoWS77
+# import shapefile
+geoWS77=gdp.read(r"geoWS77.shp")
 geoWS77.drop_duplicates()
 geoWS77['plot']=geoWS77['plot'].astype('str')
 geoWS77['plot']=geoWS77['plot'].astype('str')
-geoWS77.dtypes
 
 #generate layer for forest floor
 WS77ff=geoWS77.merge(ff, on = 'plot')

@@ -7,9 +7,8 @@ plt=reload(plt)
 %matplotlib inline
 import seaborn as sns
 
-#prepare data
-Overstory=pd.read_csv("OverstoryData.csv",
-                     header = 0,                  
+# import data with specified datatypes
+Overstory=pd.read_csv("OverstoryData.csv", header = 0,                  
                      dtype={'ws': 'str', 'plot':'str','year':object, 
                 'tree':'str', 'history':str,
               'species':'category', 'sp_cd':'category',
@@ -17,7 +16,7 @@ Overstory=pd.read_csv("OverstoryData.csv",
               }                    
                     )
 
-#create table of averages and sums
+# create table of averages and sums
 pl_s =pd.DataFrame(Overstory
              .groupby(['year', 'ws', 'history','plot'])
              .agg(
@@ -29,6 +28,7 @@ pl_s =pd.DataFrame(Overstory
              
               )
 )
+
 #conversions
 #2.471 acres=1ha
 #1plot=1/10 acre
@@ -56,36 +56,39 @@ ws_sum =pd.DataFrame(pl_s
              
               )
 )
-ws_sum.round(2)
+ws_sum.round(2) # round to 2 decimal places
 
 #create table of average live biomass and average necromass from 2018 and 2022
 ws_sum=ws_sum.reset_index(drop=False)
 pl_s=pl_s.reset_index(drop=False)
-#replace numerical 1 and str 1 with Average live biomass, etc
+#replace numerical 1 and str 1 with Average live biomass, and 2 with necromass 
+  #(some data was saved as a number and some as a string)
 ws_sum.history=ws_sum['history'].replace({1:"Average live biomass", '2':"Average necromass", 
                                           '1':"Average live biomass", 2:"Average necromass"})
 
+#select only live and necromass from history
 t1=ws_sum.loc[((ws_sum['history']=="Average live biomass"))|
          (ws_sum['history']=='Average necromass')]
-
+#select only years 2018 and 2022
 t1a=pd.DataFrame(t1.loc[((t1['year']=='2018')|
          (t1['year']=='2022'))])
+# create a seperate dataframe for each watershed (ws)
 t1b=pd.DataFrame(t1a.loc[((t1a['ws']=='77'))])
 t1c=pd.DataFrame(t1a.loc[((t1a['ws']=='80'))])
 
-#create table of live trees and standing dead trees
+#create table of individual live trees and standing dead trees
 Overstory.history=Overstory['history'].replace({1:"Live trees", '2':"Standing dead trees", 
                                       '1':"Live trees", 2:"Standing dead trees"})
 t2=Overstory.loc[((Overstory['history']=="Live trees"))|
          (Overstory['history']=='Standing dead trees')]
-
+#select years 2018 and 2022
 t2a=pd.DataFrame(t2.loc[((t2['year']=='2018')|
          (t2['year']=='2022'))])
-
+# create a seperate dataframe for each watershed
 t2b=pd.DataFrame(t2a.loc[((t2a['ws']=='77'))])
 t2c=pd.DataFrame(t2a.loc[((t2a['ws']=='80'))])                       
 
-
+# plot bar plot with averaged numbers and plot swarm of individual trees
 plt.figure(figsize=(10,5))
 sns.barplot(x="year", y='dbh_Tavg', hue="history", palette="mako",
              data=t1c) #t1c=watershed 80, years 2018 and 2022, averaged DBH
@@ -95,5 +98,5 @@ sns.swarmplot(x="year", y='dbh_cm', hue="history",  palette="Oranges",
 plt.ylabel("DBH (cm)")
 plt.title("WS80 DBH (cm) averages overlain with collected data used for the average totals")
 plt.legend(loc=1, ncol=2)
-
+# export graph
 plt.savefig('DBHws80swarm.png')

@@ -61,5 +61,6 @@ geoWS.drop_duplicates(subset=['year', 'ws', 'plot', 'history', 'tree'], inplace=
 geoWS1.to_csv("geoWS1.shp")
 geoWS.to_file("WSdataShape.shp")
 geoWS.to_csv("WSgeoData.csv")
+#plot map for viewing
 geoWS.plot()
 

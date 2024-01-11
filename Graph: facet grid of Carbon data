@@ -4,12 +4,11 @@ import matplotlib.pyplot as plt
 %matplotlib inline # needed in jupyter notebook to view graph
 import seaborn as sns
 
-#prepare data
-# file created in "Mineral soils data 2018"
-soils=pd.read_csv(
-   "2018mineralSoils.csv",
-                   header = 0)
+# file created in "Calculations: Mineral soils data 2018"
+   #import data with a header
+soils=pd.read_csv("2018mineralSoils.csv", header = 0)
 
+#generate facet grid and export png
 gr=sns.FacetGrid(soils, col="plot", palette="mako", col_wrap=3)
 gr.map(sns.scatterplot, "C_Mg_ha", "horizon")
-plt.savefig('NumPlot.')
+plt.savefig('NumPlot.png')

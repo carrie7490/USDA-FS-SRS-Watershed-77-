@@ -8,9 +8,11 @@ from sqlalchemy import create_engine
 %matplotlib inline
 # need %matplotlib inline to view graphs
 
-#shapefile combined with forest floor data
+# import data
 ff=pd.read_csv("2018FFdata.csv")
 ff.drop_duplicates()
+# import shape
+geoWS77
 geoWS77.drop_duplicates()
 geoWS77['plot']=geoWS77['plot'].astype('str')
 geoWS77['plot']=geoWS77['plot'].astype('str')

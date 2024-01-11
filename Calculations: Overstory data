@@ -193,6 +193,7 @@ treat_sum =pd.DataFrame(t6
              BM_avg=pd.NamedAgg(column="BM_Mg_ha", aggfunc="mean")
 ))
 
+#export tables
 ws_sum.to_csv("ws_avgs_1991_2022.csv")
 Overstory2.to_csv("OverstoryData.csv")
 pl_sum.to_csv("pl_sum.csv")

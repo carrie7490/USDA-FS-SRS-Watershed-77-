@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 #matplotlib inline needed to view graphs in jupyter notebook
 
-#prepare data
+# import and prepare data
 Overstory=pd.read_csv("OverstoryData.csv", header = 0,                  
                      dtype={'ws': 'str', 'plot':'str','year':object, 
                 'tree':'str', 'history':object,
@@ -15,7 +15,7 @@ Overstory=pd.read_csv("OverstoryData.csv", header = 0,
               }                    
                     )
 
-#create table of averages and sums
+# create table of averages and sums
 pl_s =pd.DataFrame(Overstory
              .groupby(['year', 'ws', 'history','plot'])
              .agg(
@@ -33,7 +33,7 @@ pl_s =pd.DataFrame(Overstory
 # 1cm^2 = 0.0001m^2
 #1kg=0.001megagram
 
-#create new column with calculations
+#create new columns with calculations
 #kg/plot convert biomass  ((biomass*10)*2.471))/1000) Mg/ha
 pl_s['BM_Mg_ha']=((pl_s.BM_kg_pl*10*2.471)/1000)
 
@@ -68,11 +68,10 @@ ws_sum.history=ws_sum['history'].replace({1:"Live Biomass", '2':"Necromass", '2?
 #select only history with live and necromass and years 2018 and 2022
 t=ws_sum.loc[((ws_sum['history']=='Live Biomass')|
           (ws_sum['history']=='Necromass'))]
-
 t2=pd.DataFrame(t.loc[((t['year']=='2018')|
          (t['year']=='2022'))])
 
-
+#plot graph and save png file
 baG=sns.catplot(x="year", y='tr_ht_Tavg', hue="history", palette="mako",col="ws", kind="bar", data=t2)
 baG.set_axis_labels("", "Average Tree hieght (m)")
 plt.savefig('tr_ht_bar.png')

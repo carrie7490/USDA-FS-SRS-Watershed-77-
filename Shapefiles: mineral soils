@@ -8,6 +8,8 @@ from sqlalchemy import create_engine
 %matplotlib inline
 # %matplotlib inline needed to view map in jupyter notebooks
 
+# import data
+# when using geopandas.read_file(r"") use only '/' in the pathway instead of '//'
 llp=gpd.read_file(r"geoWS77.shp")
 llpData=gpd.read_file(r"2018mineralSoils.csv")
 llpData.drop_duplicates()

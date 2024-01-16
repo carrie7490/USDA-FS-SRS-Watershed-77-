@@ -44,7 +44,7 @@ pl_s['BA_m2_ha']=((pl_s.BA_sum*10*2.471)/10000)
 #tree count (tr_ct*10)*2.471) = trees/ha
 pl_s['tr_ct_ha']=(pl_s.tr_ct*10*2.471)
 
-#create table of averages and sums
+#create table of averages
 ws_sum =pd.DataFrame(pl_s
              .groupby(['year', 'ws', 'history'])
              .agg(

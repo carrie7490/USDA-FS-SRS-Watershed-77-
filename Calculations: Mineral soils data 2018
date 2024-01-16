@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 
 # load and prepare data
+#when reading csv files using pandas be sure to use '//' instead of '/' when pasting the pathway
 soils_BD=pd.read_csv("LLSC_2018BD_soils.csv",
                      header = 0)
 soils_CHN=pd.read_csv("LLCS_soil_CHN_2018.csv",

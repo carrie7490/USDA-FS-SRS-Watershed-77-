@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib as mpl
-
 
 # load and prepare data
 soils_BD=pd.read_csv("LLSC_2018BD_soils.csv",

@@ -4,7 +4,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 %matplotlib inline
 import seaborn as sns
-#matplotlib inline needed to view graphs in jupyter notebook
+# %matplotlib inline needed to view graphs in jupyter notebook
 
 # import and prepare data
 Overstory=pd.read_csv("OverstoryData.csv", header = 0,                  
@@ -15,7 +15,7 @@ Overstory=pd.read_csv("OverstoryData.csv", header = 0,
               }                    
                     )
 
-# create table of averages and sums
+# create table of averages and sums per plot, history, ws, and year
 pl_s =pd.DataFrame(Overstory
              .groupby(['year', 'ws', 'history','plot'])
              .agg(
@@ -44,7 +44,7 @@ pl_s['BA_m2_ha']=((pl_s.BA_sum*10*2.471)/10000)
 pl_s['tr_ct_ha']=(pl_s.tr_ct*10*2.471)
 
 
-#create table of averages and sums
+#create table of averages 
 ws_sum =pd.DataFrame(pl_s
              .groupby(['year', 'ws', 'history'])
              .agg(
@@ -59,7 +59,7 @@ ws_sum =pd.DataFrame(pl_s
 ws_sum.round(2) #round to 2 decimals
 
 
-#create table of live and necromass from 2018 and 2022
+#change numerical 1 and string 1 to "Live Biomass", 2 to "Necromass"
 ws_sum=ws_sum.reset_index(drop=False)
 ws_sum.history=ws_sum['history'].replace({1:"Live Biomass", '2':"Necromass", '2?':"Necromass",
                                           '11':"Live Biomass",

@@ -3,6 +3,7 @@ import numpy as np
 
 
 # load and prepare data
+#when reading csv files using pandas be sure to use '//' instead of '/' when pasting the pathway
 Hugo=pd.read_csv("1991_2022_Hugo.csv", header = 0,                  
                      dtype={'ws': 'str', 'plot':'str','year':'str', 
                 'tree':'str', 'history':'str',

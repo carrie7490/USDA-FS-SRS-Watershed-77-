@@ -10,7 +10,7 @@ from sqlalchemy import create_engine
 
 
 
-#combine ws77 and ws80 shapefiles, then add overstory data to new shapefile
+#import shape files and data file
 hg_pl77=gpd.read_file(r"WS77_Hugo_Inventory_Plots_2013.shp")
 hg_pl80=gpd.read_file(r"WS80_Hugo_Inventory_Plots_2013.shp")
 llp=gpd.read_file(r"LLPC_corrected.shp")
@@ -28,18 +28,18 @@ OverstoryData.round(2) #round to 2 decimals
 llp=llp.drop('POINT_X', axis=1)
 llp=llp.drop('POINT_Y', axis=1)
 
-#set datatypes as strings
+#set column datatypes as strings
 hg_pl77['NAME']=hg_pl77['NAME'].astype('str')
 hg_pl80['NAME']=hg_pl80['NAME'].astype('str')
 llp['plot_num']=llp['plot_num'].astype('str')
-# add the same column in all files
+# add common column in all files
 hg_pl77['plotNum']='77_'+hg_pl77.NAME
 hg_pl80['plotNum']='80_'+hg_pl80.NAME
 llp['plotNum']='77_' +llp.plot_num
 #use that column to merge the three files
 geoWS1=pd.concat([hg_pl77, hg_pl80, llp])
 
-#create column in data file
+#create "plotNum" column in data file
 OverstoryData['plotNum']=OverstoryData['ws']+'_'+OverstoryData['plot']
 # use new column to merge data with shapefile
 geoWS=geoWS1.merge(OverstoryData, on = 'plotNum')

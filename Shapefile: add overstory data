@@ -11,6 +11,7 @@ from sqlalchemy import create_engine
 
 
 #import shape files and data file
+# when using geopandas.read_file(r"") use only '/' in the pathway instead of '//'
 hg_pl77=gpd.read_file(r"WS77_Hugo_Inventory_Plots_2013.shp")
 hg_pl80=gpd.read_file(r"WS80_Hugo_Inventory_Plots_2013.shp")
 llp=gpd.read_file(r"LLPC_corrected.shp")

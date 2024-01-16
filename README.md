@@ -7,7 +7,8 @@ currently being used to study forest treatment
 effects on forest production and effects of longleaf pine conversion on water resources and carbon squestration. 
 This repository contains scripts written in jupyter notebook to create shapefiles, 
 combine data, perform calculations, and generate data visualization
-of the treatment watershed (ws77) and the reference watershed (ws80). This project was funded and managed by the College of Charleston, SC and the USDA-FS-SRS.
+of the treatment watershed (ws77) and the reference watershed (ws80). Scripts include step by step instructions for the non-programmer. 
+This project was funded and managed by the College of Charleston, SC and the USDA-FS-SRS.
 
 Examples of graphs created:
 

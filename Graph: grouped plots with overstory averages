@@ -15,7 +15,7 @@ Overstory=pd.read_csv("OverstoryData.csv", header = 0,
               }                    
                     )
 
-# averages by treatment type
+# averages and summs by year, ws, history, plot, and treatment
 t =pd.DataFrame(Overstory
              .groupby(['year', 'ws', 'history','plot', 'treatment'])
              .agg(
@@ -59,7 +59,8 @@ t4=t4.reset_index(drop=False)
 # set up 4 blank plots, 2 columns and 2 rows
 fig, axes=plt.subplots(2,2, figsize=(12,12)) 
 
-# ax=axes[0,0]=1st column and 1st row; [0,1]=2nd column, first row; etc
+# fill blank plots
+  #ax=axes[0,0]=1st column and 1st row; [0,1]=2nd column, first row; etc
 g1=sns.barplot(ax=axes[0,0], data=t4, x="treatment", y="dbh_Tavg", palette="mako",)
 g1.set(ylabel="Average DBH (cm)", xlabel="")
 g2=sns.barplot(ax=axes[0,1], data=t4, x="treatment", y="tr_ht_Tavg",palette="mako",)

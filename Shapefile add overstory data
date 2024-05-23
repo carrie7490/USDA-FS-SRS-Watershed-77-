@@ -1,10 +1,7 @@
-import psycopg2
 import requests
 from shapely.geometry import Point, Polygon, MultiPolygon, mapping
-import datetime
 import geopandas as gpd
 import pandas as pd
-from sqlalchemy import create_engine
 %matplotlib inline
 # need %matplotlib inline to view graphs
 
